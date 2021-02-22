@@ -9,6 +9,7 @@ import net.craftions.lobby.commands.CommandSpawn;
 import net.craftions.lobby.config.Config;
 import net.craftions.lobby.events.*;
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
@@ -64,6 +65,16 @@ public class Lobby extends JavaPlugin {
         getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
         System.out.println("Loaded " + this.getDescription().getName() + " v" + this.getDescription().getVersion() + " by" + this.getDescription().getAuthors().toString());
         super.onEnable();
+        Bukkit.getScheduler().runTaskTimer(this, new Runnable() {
+            @Override
+            public void run() {
+                Bukkit.getOnlinePlayers().forEach(p -> {
+                    if (p.getGameMode().equals(GameMode.ADVENTURE) || p.getGameMode().equals(GameMode.SURVIVAL)) {
+                        p.setAllowFlight(p.getFallDistance() == 0);
+                    }
+                });
+            }
+        }, 10, 10);
     }
 
     public Boolean createFolderRoot(File f){
